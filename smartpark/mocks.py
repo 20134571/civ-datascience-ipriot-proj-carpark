@@ -30,6 +30,7 @@ class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
     def __init__(self):
         self.configuration = parse_config(MockCarparkManager.CONFIG_FILE, "Queen Street")
         #configuration = parse_config(MockCarparkManager.CONFIG_FILE,"Queen Street")
+        self._temperature = 30
 
     @property
     def available_spaces(self):
@@ -37,11 +38,17 @@ class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
 
     @property
     def temperature(self):
-        return 1000
+        return int(self._temperature)
 
     @property
     def current_time(self):
         return time.localtime()
+
+    def temperature_reading(self,reading):
+        self._temperature = reading
+        print(f'temperature is {reading}')
+        if hasattr(self, "display") and self.display is not None:
+        self.display.update_display()
 
     def incoming_car(self,license_plate):
         print('Car in! ' + license_plate)
@@ -49,14 +56,11 @@ class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
     def outgoing_car(self,license_plate):
         print('Car out! ' + license_plate)
 
-    def temperature_reading(self,reading):
-        print(f'temperature is {reading}')
 
 class Car:
     def __init__(self,plate=None):
         self.LicensePlate = plate
 
 if __name__ == '__main__':
-    manager = MockCarparkManager()
     print(manager.configuration)
     print(manager.configuration["location"])       
