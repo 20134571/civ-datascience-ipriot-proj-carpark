@@ -25,10 +25,11 @@ import time
 '''
 class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
     #constant, for where to get the configuration data
-    CONFIG_FILE = "carpark_config.txt"
+    CONFIG_FILE = "samples_and_snippets\\config2.json"
 
     def __init__(self):
-        configuration = parse_config(MockCarparkManager.CONFIG_FILE)
+        self.configuration = parse_config(MockCarparkManager.CONFIG_FILE, "Queen Street")
+        #configuration = parse_config(MockCarparkManager.CONFIG_FILE,"Queen Street")
 
     @property
     def available_spaces(self):
@@ -54,3 +55,8 @@ class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
 class Car:
     def __init__(self,plate=None):
         self.LicensePlate = plate
+
+if __name__ == '__main__':
+    manager = MockCarparkManager()
+    print(manager.configuration)
+    print(manager.configuration["location"])       

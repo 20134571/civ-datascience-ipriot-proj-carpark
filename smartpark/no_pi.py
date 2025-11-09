@@ -185,3 +185,6 @@ if __name__ == '__main__':
     detector.add_listener(mock)
 
     root.mainloop()
+    print (site_name)
+    print(available_spaces)
+    print(temperature)

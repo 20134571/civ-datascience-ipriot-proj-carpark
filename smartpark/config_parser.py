@@ -1,41 +1,65 @@
 """A class or function to parse the config file and return the values as a dictionary.
 
-The config file itself can be any of the following formats (recommend one of pandas, json, or ryo):
-
-- You can use pandas to read a data file if you like. Something simple like a CSV would be best.
-
-- ryo: means 'roll your own' and is a simple text file with key-value pairs separated by an equals sign. For example:
-```
-location = "Moondalup City Square Parking"
-number_of_spaces = 192
-```
-**you** read the file and parse it into a dictionary.
-- json: a json file with key-value pairs. For example:
-```json
-{location: "Moondalup City Square Parking", number_of_spaces: 192}
-```
-json is built in to python, so you can use the json module to parse it into a dictionary.
-- toml: a toml file with key-value pairs. For example:
-```toml
-[location]
-name = "Moondalup City Square Parking"
-spaces = 192
-```
-toml is part of the standard library in python 3.11, otherwise you need to install tomli to parse it into a dictionary.
-```bash
-python -m pip install tomli
-```
-see [realpython.com](https://realpython.com/python-toml/) for more info.
-
-Finally, you can use `yaml` if you prefer.
-
-
-
 """
+import json
+from pathlib import Path
 
-
-
-def parse_config(config_file: str) -> dict:
+def parse_config(config_file: str,site_name: str) -> dict:
     """Parse the config file and return the values as a dictionary"""
-    # TODO: get the configuration from a parsed file
-    return {'location': 'TBD', 'total_spaces': 0, 'log_file':'carpark_log.txt' }
+    #  CONFIG_FILE = "samples_and_snippets\\config2.json"
+
+  
+    # Ensure the config file exists
+    config_path = Path(config_file)
+    if not config_path.exists():
+        raise FileNotFoundError(f"Config file not found: {config_file}")
+  
+    #open JSON file
+    with open(config_file, "r") as f:
+        carparks_loaded = json.load(f)
+
+    # Clean whitespace in keys
+    carpark_dict = {k.strip(): v for k, v in carparks_loaded.items()}
+    cleaned_dict = carpark_dict 
+
+    # check for the dictionary for bays in king street
+  #  site = site_name.strip()      
+  #  total_spaces = carpark_dict.get(site,"Is not a carpark")
+    a = carpark_dict["CarParks"]
+
+    for park in a:
+        location= park.get("location","").strip().lower() == site_name
+        if (
+           park.get("location","").strip().lower() == site_name.lower()
+           or park.get("name", "").strip().lower() == site_name.lower()
+        ):         
+            #return only the relevant information    
+            return {"location":park.get("location","Unknown"),
+                    "total_spaces":park.get("total_spaces",0),
+                    "total_cars":park.get("total_cars",0),
+                    "log_file":park.get("log_file","carpark_log.txt")
+                    }
+        
+    #if not return found
+    return {"error": f"No CarPark Found for site '{site}"}
+            
+    #return {'location': 'TBD', 'total_spaces': 0, 'log_file':'carpark_log.txt' }
+    return {'location': site, 'total_spaces' : total_spaces, 'log_file': log_file }
+
+#CNFIG_FILE = "samples_and_snippets\\config2.json"
+#CONFIG_FILE = "samples_and_snippets\\Carpark_config.json"
+
+
+#if __name__ == "__main__":
+    #result = parse_config("Carpark_config.json","King Street")
+    #result = parse_config("samples_and_snippets\\config2.json","King Street")
+    print({'location': 'TBD', 'total_spaces': 0, 'log_file':'carpark_log.txt'})
+    print(parse_config(CONFIG_FILE,"Queen Street"))
+    #print(parse_config(CONFIG_FILE,"Queen Street"))
+
+    # print(parse_config("samples_and_snippets\\config2.json")) #  Visual sudiio import
+
+    #cfg_data = parse-config ("samples_and_snippets\\config2.json")
+    #print(cfg_data)
+
+    #Can now call any item from the dictionary

@@ -1,0 +1,33 @@
+{
+    "CarParks": [
+        {
+            "name": "ABC-park-international",
+            "total_spaces": 200,
+            "unuseable_spaces": 0,
+            "location": "Long Street",
+            "log_file":"long_log.txt"
+                     
+        },
+        {
+            "name": "ABC-park-international",
+            "total_spaces": 150,
+            "unuseable_spaces": 15,
+            "location": "King Street",
+            "log_file": "king_log.txt"
+        },
+        {
+            "name": "ABC-park-international",
+            "total_spaces": 150,
+            "unuseable_spaces": 15,
+            "location": "Queen Street",
+            "log_file": "queen_log.txt"
+        },
+        {
+            "name": "Moondalup-Carpark",
+            "total_spaces": 120,
+            "unuseable_spaces": 25,
+            "location": "Moondalup",
+            "log_file": "moondalup_log.txt"
+        }
+    ]
+}
