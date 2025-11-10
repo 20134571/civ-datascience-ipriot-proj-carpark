@@ -11,6 +11,7 @@ import tkinter as tk
 from typing import Iterable
 #TODO: replace this module with yours
 import mocks 
+
 # ------------------------------------------------------------------------------------#
 # You don't need to understand how to implement this class.                           #
 # ------------------------------------------------------------------------------------#
@@ -142,6 +143,7 @@ class CarDetectorWindow:
         )
         self.plate_label.grid(padx=10, pady=5,column=0,row=3)
         self.plate_var=tk.StringVar()
+        self.plate_var.trace_add("write", lambda *args: self.license_changed())
         self.plate_box=tk.Entry(
             self.root,font=('Arial', 20),textvariable=self.plate_var
         )
@@ -169,8 +171,27 @@ class CarDetectorWindow:
         for listener in self.listeners:
             listener.temperature_reading(temp)
 
+import threading
+
 
 if __name__ == '__main__':
+   
+    def simulate_queen_street_log(mock): 
+        # Create a car for testing
+        car1 = mocks.Car("1DKH682")
+        car1.enter()
+        print("Car entered:", car1.car_info())
+        mock.log_record(car1)  # write to log
+
+        # Wait a few seconds to simulate time passing
+        time.sleep(2)
+
+        car1.exit()
+        print("Car exited:", car1.car_info())
+        mock.log_record(car1)  # write to log
+
+
+    #launch Gui
     root = tk.Tk()
     #TODO: This is my dodgy mockup. Replace it with a good one!
     mock=mocks.MockCarparkManager()
@@ -184,5 +205,9 @@ if __name__ == '__main__':
     #TODO: Attach your event listener
     detector.add_listener(mock)
 
+    # Simulate car entries and exits in a separate thread
+    threading.Thread(target=simulate_queen_street_log, args=(mock,), daemon=True).start()
+    
     root.mainloop()
-  
+    
+

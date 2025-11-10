@@ -1,0 +1,4 @@
+17:27:00 - {'license_plate': '1DKH682', 'time in': '17:27:00', 'time_out': None, 'status': 'In'}
+17:27:02 - {'license_plate': '1DKH682', 'time in': '17:27:00', 'time_out': '17:27:02', 'status': 'Out'}
+17:51:18 - {'license_plate': '1DKH682', 'time in': '17:51:18', 'time_out': None, 'status': 'In'}
+17:51:20 - {'license_plate': '1DKH682', 'time in': '17:51:18', 'time_out': '17:51:20', 'status': 'Out'}
