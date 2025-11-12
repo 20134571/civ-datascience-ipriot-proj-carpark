@@ -24,26 +24,30 @@ As a driver, I want to see the current temperature and time while checking for p
 
 As a parking lot manager, I want to track cars entering and leaving the parking lot in real-time so that I can manage parking resources effectively.
 
-## Technical Backlog Items
+## Backlog Items
 
-1. Develop a Python application to count cars entering and exiting the parking lot using SenseHat sensors.
+1. Develop a Python application to count cars entering and exiting the parking lot (we will be simulating the automatic sensors).
 3. Develop a Python application to display parking availability, temperature, and time on a suitable display.
-4. Ensure proper data handling and error prevention (e.g., no negative parking spots).
+4. Ensure proper data handling and error prevention (e.g. no negative parking spots; unrecognised cars should not free up a parking space).
 5. Read a configuration file in the format of your choice. The number of parking spots should be configurable.
+6. Document the solution. Add docstrings to all classes and methods in the Car class and the Carpark Manager class.
+7. Develop automated tests for the Carpark Manager, at least one test per event. These may be in the form of unit tests or doctests.
+8. Document all manual tests.
 
 ## Definition of Done
 
 1. Cars entering and exiting the parking lot are accurately tracked, and a running total of available spots is maintained.
 3. Parking availability, temperature, and time are displayed in a user-friendly format on a suitable display.
 4. The system is tested and runs seamlessly. A Raspberry Pi with SenseHat may be used to generate signals instead of the provided user interface.
-5. The code is well-documented, object-oriented, and follows best practices.
+5. The code is well-documented, object-oriented, tested, and follows best practices.
 
 ## Functional Requirements Summary
 
 1. The system must count cars entering and exiting the parking lot.
 2. The system must maintain a running total of available parking spots.
-3. The system must log its activity to a file as events arise.
-4. The system must display parking availability, temperature, and time on a suitable display.
+3. The system must read its configuration from a file.
+4. The system must log (i.e. write) its activity to a file as events arise.
+5. The system must display parking availability, temperature, and time on a suitable display.
 
 ## Non-Functional Requirements Summary
 

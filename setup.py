@@ -1,3 +1,5 @@
+# This code will set up smartpark as a module.
+# This step is not necessary for data science students.
 from setuptools import find_packages, setup
 
 setup(
