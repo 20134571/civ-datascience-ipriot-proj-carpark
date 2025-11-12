@@ -175,7 +175,7 @@ import threading
 
 
 if __name__ == '__main__':
-   
+    
     def simulate_queen_street_log(mock): 
         # Create a car for testing
         car1 = mocks.Car("1DKH682")

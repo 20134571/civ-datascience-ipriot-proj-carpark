@@ -36,7 +36,7 @@ def parse_config(config_file: str,site_name: str) -> dict:
             #return only the relevant information    
             return {"location":park.get("location","Unknown"),
                     "total_spaces":park.get("total_spaces",0),
-                    "total_cars":park.get("total_cars",0),
+                    "unuseable_spaces":park.get("unuseable_spaces",0),
                     "log_file":park.get("log_file","carpark_log.txt")
                     }
         
