@@ -10,7 +10,7 @@ import time
 import tkinter as tk
 from typing import Iterable
 #TODO: replace this module with yours
-import mocks 
+import mocks #replace this module with yours
 
 # ------------------------------------------------------------------------------------#
 # You don't need to understand how to implement this class.                           #

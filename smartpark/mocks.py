@@ -1,4 +1,4 @@
-from interfaces import CarparkSensorListener
+ from interfaces import CarparkSensorListener
 from interfaces import CarparkDataProvider
 from config_parser import parse_config
 import time
@@ -18,7 +18,7 @@ import os
         * Cars arriving
         * Cars departing
         * Temperature measurements.
-    - The manager class should provide informtaion to potential customers:
+    - The manager class should provide information to potential customers:
         * The current time (optional)
         * The number of bays available
         * The current temperature
