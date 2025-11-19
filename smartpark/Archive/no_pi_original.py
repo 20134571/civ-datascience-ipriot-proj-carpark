@@ -10,7 +10,7 @@ import time
 import tkinter as tk
 from typing import Iterable
 #TODO: replace this module with yours
-import mocks 
+import mocks #replace this module with yours
 
 # ------------------------------------------------------------------------------------#
 # You don't need to understand how to implement this class.                           #
@@ -80,7 +80,6 @@ class CarParkDisplay:
     def __init__(self,root):
         self.window = WindowedDisplay(root,
             'Moondalup', CarParkDisplay.fields)
-        self._update_event = threading.Event()
         updater = threading.Thread(target=self.check_updates)
         updater.daemon = True
         updater.start()
@@ -94,7 +93,6 @@ class CarParkDisplay:
     def data_provider(self,provider):
         if isinstance(provider,CarparkDataProvider):
             self._provider=provider
-            #provider.set_update_signal(self._update_event)# new
 
     def update_display(self):
         field_values = dict(zip(CarParkDisplay.fields, [
@@ -106,9 +104,6 @@ class CarParkDisplay:
 
     def check_updates(self):    
         while True:
-            #self._update_event.wait()
-            #self._update_event.clear()  #reset the event so it can wait again   
-
             # TODO: This timer is pretty janky! Can you provide some kind of signal from your code
             # to update the display?
             #display.data_provider = mock
@@ -116,7 +111,7 @@ class CarParkDisplay:
             # When you get an update, refresh the display.
             if self._provider is not None:
                 self.update_display()
-            #time.sleep(0.1)
+
 
 class CarDetectorWindow:
     """Provides a couple of simple buttons that can be used to represent a sensor detecting a car. This is a skeleton only."""
@@ -147,8 +142,8 @@ class CarDetectorWindow:
             self.root, text="License Plate", font=('Arial', 20)
         )
         self.plate_label.grid(padx=10, pady=5,column=0,row=3)
-        self.plate_var=tk.StringVar()        
-        self.plate_var.trace_add("write", lambda *args: self.license_changed())        
+        self.plate_var=tk.StringVar()
+        self.plate_var.trace_add("write", lambda *args: self.license_changed())
         self.plate_box=tk.Entry(
             self.root,font=('Arial', 20),textvariable=self.plate_var
         )
@@ -180,7 +175,7 @@ import threading
 
 
 if __name__ == '__main__':
-   
+    
     def simulate_queen_street_log(mock): 
         # Create a car for testing
         car1 = mocks.Car("1DKH682")
@@ -189,7 +184,7 @@ if __name__ == '__main__':
         mock.log_record(car1)  # write to log
 
         # Wait a few seconds to simulate time passing
-        time.sleep(4)
+        time.sleep(2)
 
         car1.exit()
         print("Car exited:", car1.car_info())
@@ -211,7 +206,7 @@ if __name__ == '__main__':
     detector.add_listener(mock)
 
     # Simulate car entries and exits in a separate thread
-    #threading.Thread(target=simulate_queen_street_log, args=(mock,), daemon=True).start()
+    threading.Thread(target=simulate_queen_street_log, args=(mock,), daemon=True).start()
     
     root.mainloop()
     

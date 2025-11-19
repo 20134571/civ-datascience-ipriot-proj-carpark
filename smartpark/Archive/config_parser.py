@@ -44,7 +44,7 @@ def parse_config(config_file: str,site_name: str) -> dict:
     return {"error": f"No CarPark Found for site '{site}"}
             
     #return {'location': 'TBD', 'total_spaces': 0, 'log_file':'carpark_log.txt' }
-    return {'location': site, 'total_spaces' : total_spaces, 'unuseable_spaces' : unuseable_spaces, 'log_file': log_file }
+    return {'location': site, 'total_spaces' : total_spaces, 'log_file': log_file }
 
 #CNFIG_FILE = "samples_and_snippets\\config2.json"
 #CONFIG_FILE = "samples_and_snippets\\Carpark_config.json"
