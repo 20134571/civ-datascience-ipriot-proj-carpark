@@ -164,8 +164,8 @@ class CarDetectorWindow:
 
     def incoming_car(self):
 #        print("Car goes in")
-        for listener in self.listeners:
-            listener.incoming_car(self.current_license)
+            for listener in self.listeners:
+                listener.incoming_car(self.current_license)
 
     def outgoing_car(self):
 #        print("Car goes out")

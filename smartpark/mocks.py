@@ -80,16 +80,18 @@ class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
         event_date=  time.strftime("%Y-%m-%d")
         event_time= time.strftime("%H:%M:%S")
         #license = Car(license_plate)
-        new_car_record = {"license_plate": license_plate, "time_in": event_time, "status": "In", "date_in" : event_date}
+        #new_car_record = {"license_plate": license_plate, "time_in": event_time, "status": "In", "date_in" : event_date}
+        new_car_record = car.car_info()
         self.cars_log.append(new_car_record)
         self.log_record(car)  # write to log
         print(f"Entry {new_car_record['license_plate']} logged at {new_car_record['time_in']}")
+        #if self._update_event:
+        #    self._update_event.set()
+        
 
     def outgoing_car(self,license_plate):
         license_plate = license_plate.upper()
-        car = Car(license_plate)
-        car.exit()
-
+        
         event_time = time.strftime("%H:%M:%S")
         event_date=  time.strftime("%Y-%m-%d")
         #license = Car(license_plate)
@@ -101,17 +103,27 @@ class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
         for record in self.cars_log:
             if record["license_plate"] == license_plate and record["status"] == "In":
                 car_found = record
-                time_in = record.get("time_in",None)
-                date_in = record.get("date_in",None)
+                #time_in = record.get("time_in",None)
+                #date_in = record.get("date_in",None)
                 #print(self.cars_log)
                 break
 
         if car_found is not None:
-            exit_car_record = {"license_plate": license_plate, "time_in": time_in, "time_out" : event_time, "status": "Out", "date_in" : date_in, "date_out" : event_date}
+            car = Car(license_plate)
+            car.exit()
+            
+            car.time_in = car_found["time_in"]
+            car.date_in = car_found["date_in"]
+
+            exit_car_record = {"license_plate": license_plate, "time_in": car.time_in, "time_out" : event_time, "status": "Out", "date_in" : car.date_in, "date_out" : event_date}
             self.cars_log.remove(car_found)  #if new licence plate is in list, Car.car_info(self.license_plate), then remove from list
             self._total_cars_in -= 1
+
+            final_log_data = car.car_info()
+            print(f"DEBUG: Logging exit data -> {final_log_data}")
+
             #self.cars_log.append(exit_car_record) - this is wrong as it writes to the variable cars_log not the text log. 
-            #self.log_record(car)  # write to log
+            self.log_record(car)  # write to log
             #exit_log = {
             #    "license": license_plate,
             #    "time_in": time_in, 
@@ -123,15 +135,22 @@ class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
 
         else:
             car = Car(license_plate)
+            car.exit()
+            
+            car.time_in = "N/A" 
+            car.date_in = "N/A"
+
             #car.time_in = "None"
-            car.time_out = event_time, 
-            car.status = "Out"
+            #car.time_out = event_time, 
+            #car.status = "Out"
             #car.date_in = "None", 
-            car.date_out = event_date
-            self.cars_log.append({"license_plate": license, "time_in": "None", "time_out" : event_time, "status": "Out", "date_in" : "None", "date_out" : event_date})
-            #self.log_record(car)
+            #car.date_out = event_date
+            #self.cars_log.append({"license_plate": license, "time_in": "None", "time_out" : event_time, "status": "Out", "date_in" : "None", "date_out" : event_date})
+            self.log_record(car) # write to log
         
         print('Car out! ' + license_plate)
+        #if self._update_event:
+        #    self._update_event.set()
         #self.log_record(Car(license_plate))  # write to log
 
     #logging method
@@ -197,8 +216,14 @@ class Car:
         self.status ="Out"
 
     def car_info(self):
-        return {"license_plate" : self.license_plate, "time in" : self.time_in, "time_out" : self.time_out, "status" : self.status,"date in" : self.date_in, "date_out" : self.date_out}
-                 
+        return {
+            "license_plate" : self.license_plate, 
+            "time_in" : self.time_in, 
+            "time_out" : self.time_out, 
+            "status" : self.status,
+            "date_in" : self.date_in, 
+            "date_out" : self.date_out
+        }                 
 #if __name__ == '__main__':
 #    print(manager.configuration)
 #    print(manager.configuration["location"])       
