@@ -1,37 +1,9 @@
-2025-11-19--11:51:30 - {'license_plate': '1ALS819', 'time in': '11:51:27', 'time_out': None, 'status': 'In', 'date in': '2025-11-19', 'date_out': None}
-2025-11-19--12:32:10 - {'license_plate': '1ALS819', 'time in': '12:30:42', 'time_out': None, 'status': 'In', 'date in': '2025-11-19', 'date_out': None}
-2025-11-19--12:37:11 - {'license_plate': '1ALS819', 'time in': '12:34:43', 'time_out': None, 'status': 'In', 'date in': '2025-11-19', 'date_out': None}
-2025-11-19--12:47:28 - {'license_plate': '1ALS820', 'time in': '12:47:24', 'time_out': None, 'status': 'In', 'date in': '2025-11-19', 'date_out': None}
-2025-11-19--12:56:22 - {'license_plate': '1CPM214', 'time in': '12:50:12', 'time_out': None, 'status': 'In', 'date in': '2025-11-19', 'date_out': None}
-2025-11-19--13:09:32 - {'license_plate': '1ALS819', 'time in': '13:09:30', 'time_out': None, 'status': 'In', 'date in': '2025-11-19', 'date_out': None}
-2025-11-19--13:10:00 - {'license_plate': '1ALS820', 'time in': '13:09:59', 'time_out': None, 'status': 'In', 'date in': '2025-11-19', 'date_out': None}
-2025-11-19--13:14:24 - {'license_plate': '1CPM214', 'time in': '13:10:27', 'time_out': None, 'status': 'In', 'date in': '2025-11-19', 'date_out': None}
-2025-11-19--14:15:16 - {'license_plate': '1ALS819', 'time in': '14:15:15', 'time_out': None, 'status': 'In', 'date in': '2025-11-19', 'date_out': None}
-2025-11-19--14:15:58 - {'license_plate': '1ALS820', 'time in': '14:15:57', 'time_out': None, 'status': 'In', 'date in': '2025-11-19', 'date_out': None}
-2025-11-19--14:25:18 - {'license_plate': '1CPM214', 'time in': '14:16:33', 'time_out': None, 'status': 'In', 'date in': '2025-11-19', 'date_out': None}
-2025-11-19--14:32:09 - {'license_plate': '1ALS819', 'time in': '14:32:08', 'time_out': None, 'status': 'In', 'date in': '2025-11-19', 'date_out': None}
-2025-11-19--14:32:31 - {'license_plate': '1ALS820', 'time in': '14:32:29', 'time_out': None, 'status': 'In', 'date in': '2025-11-19', 'date_out': None}
-2025-11-19--14:32:54 - {'license_plate': '1CPM214', 'time in': '14:32:53', 'time_out': None, 'status': 'In', 'date in': '2025-11-19', 'date_out': None}
-2025-11-19--14:33:55 - {'license_plate': '1CPM214', 'time in': None, 'time_out': '14:33:44', 'status': 'Out', 'date in': None, 'date_out': '2025-11-19'}
-2025-11-19--14:34:43 - {'license_plate': '1ALS820', 'time in': None, 'time_out': '14:34:36', 'status': 'Out', 'date in': None, 'date_out': '2025-11-19'}
-2025-11-19--14:35:10 - {'license_plate': '1ALS819', 'time in': None, 'time_out': '14:35:00', 'status': 'Out', 'date in': None, 'date_out': '2025-11-19'}
-2025-11-19--14:35:40 - {'license_plate': '1DKH682', 'time in': None, 'time_out': '14:35:32', 'status': 'Out', 'date in': None, 'date_out': '2025-11-19'}
-2025-11-19--14:36:49 - {'license_plate': '1CPM215', 'time in': None, 'time_out': ('14:36:19',), 'status': 'Out', 'date in': None, 'date_out': '2025-11-19'}
-2025-11-19--14:57:53 - {'license_plate': '1ALS819', 'time in': '14:57:52', 'time_out': None, 'status': 'In', 'date in': '2025-11-19', 'date_out': None}
-2025-11-19--14:58:17 - {'license_plate': '1ALS820', 'time in': '14:58:16', 'time_out': None, 'status': 'In', 'date in': '2025-11-19', 'date_out': None}
-2025-11-19--14:58:38 - {'license_plate': '1CPM214', 'time in': '14:58:37', 'time_out': None, 'status': 'In', 'date in': '2025-11-19', 'date_out': None}
-2025-11-19--14:59:03 - {'license_plate': '1DKH678', 'time in': 'N/A', 'time_out': '14:59:03', 'status': 'Out', 'date in': 'N/A', 'date_out': '2025-11-19'}
-2025-11-19--15:01:54 - {'license_plate': '1CPM215', 'time in': 'N/A', 'time_out': '15:01:52', 'status': 'Out', 'date in': 'N/A', 'date_out': '2025-11-19'}
-2025-11-19--15:08:50 - {'license_plate': '1CPM214', 'time in': '15:08:48', 'time_out': None, 'status': 'In', 'date in': '2025-11-19', 'date_out': None}
-2025-11-19--15:12:38 - {'license_plate': '1CPM215', 'time_in': '15:12:36', 'time_out': None, 'status': 'In', 'date_in': '2025-11-19', 'date_out': None}
-2025-11-19--15:18:48 - {'license_plate': '1CPM216', 'time_in': '15:18:46', 'time_out': None, 'status': 'In', 'date_in': '2025-11-19', 'date_out': None}
-2025-11-19--15:31:11 - {'license_plate': '1CPM217', 'time_in': '15:31:10', 'time_out': None, 'status': 'In', 'date_in': '2025-11-19', 'date_out': None}
-2025-11-19--15:32:34 - {'license_plate': '1CPM217', 'time_in': '15:31:10', 'time_out': '15:32:03', 'status': 'Out', 'date_in': '2025-11-19', 'date_out': '2025-11-19'}
-2025-11-19--15:34:45 - {'license_plate': '1ALS819', 'time_in': '15:34:44', 'time_out': None, 'status': 'In', 'date_in': '2025-11-19', 'date_out': None}
-2025-11-19--15:35:34 - {'license_plate': '1ALS820', 'time_in': '15:35:33', 'time_out': None, 'status': 'In', 'date_in': '2025-11-19', 'date_out': None}
-2025-11-19--15:36:11 - {'license_plate': '1CPM214', 'time_in': '15:36:10', 'time_out': None, 'status': 'In', 'date_in': '2025-11-19', 'date_out': None}
-2025-11-19--15:36:38 - {'license_plate': '1CPM214', 'time_in': '15:36:10', 'time_out': '15:36:36', 'status': 'Out', 'date_in': '2025-11-19', 'date_out': '2025-11-19'}
-2025-11-19--15:37:37 - {'license_plate': '1ALS820', 'time_in': '15:35:33', 'time_out': '15:37:35', 'status': 'Out', 'date_in': '2025-11-19', 'date_out': '2025-11-19'}
-2025-11-19--15:37:56 - {'license_plate': '1ALS19', 'time_in': 'N/A', 'time_out': '15:37:56', 'status': 'Out', 'date_in': 'N/A', 'date_out': '2025-11-19'}
-2025-11-19--15:39:02 - {'license_plate': '1DKH682', 'time_in': '17:44:41', 'time_out': '15:39:01', 'status': 'Out', 'date_in': '2025-11-18', 'date_out': '2025-11-19'}
-2025-11-19--15:39:35 - {'license_plate': '1ALS819', 'time_in': '15:34:44', 'time_out': '15:39:31', 'status': 'Out', 'date_in': '2025-11-19', 'date_out': '2025-11-19'}
+2025-11-19--16:10:00 - {'license_plate': '1DKH682', 'time_in': '16:10:00', 'time_out': None, 'status': 'In', 'date_in': '2025-11-19', 'date_out': None}
+2025-11-19--16:10:10 - {'license_plate': '1ALS819', 'time_in': '16:10:10', 'time_out': None, 'status': 'In', 'date_in': '2025-11-19', 'date_out': None}
+2025-11-19--16:10:22 - {'license_plate': '1ALS820', 'time_in': '16:10:22', 'time_out': None, 'status': 'In', 'date_in': '2025-11-19', 'date_out': None}
+2025-11-19--16:10:37 - {'license_plate': '1CPM214', 'time_in': '16:10:37', 'time_out': None, 'status': 'In', 'date_in': '2025-11-19', 'date_out': None}
+2025-11-19--16:12:24 - {'license_plate': '1DKH678', 'time_in': 'N/A', 'time_out': '16:12:24', 'status': 'Out', 'date_in': 'N/A', 'date_out': '2025-11-19'}
+2025-11-19--16:12:30 - {'license_plate': '1ALS819', 'time_in': '16:10:10', 'time_out': '16:12:30', 'status': 'Out', 'date_in': '2025-11-19', 'date_out': '2025-11-19'}
+2025-11-19--16:12:38 - {'license_plate': '1ALS820', 'time_in': '16:10:22', 'time_out': '16:12:38', 'status': 'Out', 'date_in': '2025-11-19', 'date_out': '2025-11-19'}
+2025-11-19--16:12:44 - {'license_plate': '1CPM214', 'time_in': '16:10:37', 'time_out': '16:12:44', 'status': 'Out', 'date_in': '2025-11-19', 'date_out': '2025-11-19'}
+2025-11-19--16:13:00 - {'license_plate': '1CPM215', 'time_in': 'N/A', 'time_out': '16:13:00', 'status': 'Out', 'date_in': 'N/A', 'date_out': '2025-11-19'}
