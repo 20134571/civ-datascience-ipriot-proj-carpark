@@ -90,11 +90,12 @@ class CarParkDisplay:
     @property
     def data_provider(self):
         return self._provider
+        
     @data_provider.setter
     def data_provider(self,provider):
         if isinstance(provider,CarparkDataProvider):
             self._provider=provider
-            #provider.set_update_signal(self._update_event)# new
+            self.data_provider.set_update_signal(self._update_event) # This is part of the new timer installed in Check_updates
 
     def update_display(self):
         field_values = dict(zip(CarParkDisplay.fields, [
@@ -106,17 +107,13 @@ class CarParkDisplay:
 
     def check_updates(self):    
         while True:
-            #self._update_event.wait()
-            #self._update_event.clear()  #reset the event so it can wait again   
-
-            # TODO: This timer is pretty janky! Can you provide some kind of signal from your code
-            # to update the display?
-            #display.data_provider = mock
-            time.sleep(1)
-            # When you get an update, refresh the display.
+            """ added the following timer to enable data provider and CarparkManager to talk to each other"""
+            self._update_event.wait(1.0) #one second update to enable clock to operate 
+            self._update_event.clear()  #reset the event so it can wait again   #***
+            
             if self._provider is not None:
                 self.update_display()
-            #time.sleep(0.1)
+            
 
 class CarDetectorWindow:
     """Provides a couple of simple buttons that can be used to represent a sensor detecting a car. This is a skeleton only."""
@@ -163,12 +160,12 @@ class CarDetectorWindow:
             self.listeners.append(listener)
 
     def incoming_car(self):
-#        print("Car goes in")
-            for listener in self.listeners:
+        print("Car goes in")
+        for listener in self.listeners:
                 listener.incoming_car(self.current_license)
 
     def outgoing_car(self):
-#        print("Car goes out")
+        print("Car goes out")
         for listener in self.listeners:
             listener.outgoing_car(self.current_license)
 

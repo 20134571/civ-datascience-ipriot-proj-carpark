@@ -26,13 +26,17 @@ import os
     
 '''
 class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
+    import threading        # REQUIRED FOR NEW TIMER
     #constant, for where to get the configuration data
     CONFIG_FILE = "samples_and_snippets\\config2.json"
     LOGGING = "samples_and_snippets\\"  
 
     def __init__(self):
         self.configuration = parse_config(MockCarparkManager.CONFIG_FILE, "Queen Street")
-        
+        #Adding code for timer improvement - need a source of knowledge, using Gemin in the absence of this being available.
+        # ... (initialization code remains the same)
+        self._update_signal = None # New attribute to store the event
+                
         self._temperature = 30
         self._total_spaces = self.configuration ["total_spaces"]
         self.unuseable_spaces = self.configuration.get("unuseable_spaces",0)
@@ -51,7 +55,7 @@ class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
             format='%(asctime)s - %(message)s',  # optional timestamp
             datefmt='%Y-%m-%d--%H:%M:%S'
         )
- 
+
     @property
     def available_spaces(self):
         return int(self._available_spaces - self._total_cars_in) 
@@ -64,6 +68,17 @@ class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
     @property
     def current_time(self):
         return time.localtime()
+    
+    # Added this methods to enable the new timer in no_pi check_updates to communicate with CarparkDisplay
+    def set_update_signal(self, update_event):
+            self._update_signal = update_event
+
+    def signal_update(self):
+            """Sets the event to notify the CarParkDisplay to refresh."""
+            if self._update_signal:
+                self._update_signal.set()
+
+        #Ended of added code
 
     def temperature_reading(self,reading):
         self._temperature = reading
@@ -74,6 +89,8 @@ class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
     def incoming_car(self,license_plate):
         license_plate = license_plate.upper()
         self._total_cars_in += 1
+        self.signal_update()  # After updating the car count, signal the display to update *****
+        
         print('Car in! ' + license_plate)
         car = Car(license_plate)
         car.enter()
@@ -105,7 +122,7 @@ class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
             
             car.time_in = car_found["time_in"]
             car.date_in = car_found["date_in"]
-                     
+                    
             # Define date/time formats used in Car.enter() and Car.exit()
             DATE_FORMAT = "%Y-%m-%d"
             TIME_FORMAT = "%H:%M:%S"
@@ -129,10 +146,12 @@ class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
                 
             except Exception as e:
                 print(f"Error calculating duration for {license_plate}: {e}")
-           
-           #exit_car_record = {"license_plate": license_plate, "time_in": car.time_in, "time_out" : event_time, "status": "Out", "date_in" : car.date_in, "date_out" : event_date}
+        
+        #exit_car_record = {"license_plate": license_plate, "time_in": car.time_in, "time_out" : event_time, "status": "Out", "date_in" : car.date_in, "date_out" : event_date}
             self.cars_log.remove(car_found)  # remove from list
             self._total_cars_in -= 1
+            self.signal_update()  # After updating the car count, signal the display to update ****
+            #self.display.update_display()
 
             final_log_data = car.car_info()
             print(f"DEBUG: Logging exit data -> {final_log_data}")
@@ -146,9 +165,9 @@ class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
             
             car.time_in = "N/A" 
             car.date_in = "N/A"
-           
+        
             self.log_record(car) # write to log
-                     
+                    
         print('Car out! ' + license_plate)
 
     #logging method
