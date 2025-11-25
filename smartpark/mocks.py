@@ -23,9 +23,23 @@ import os
         * The current time (optional)
         * The number of bays available
         * The current temperature
+        ##COMPLETE
     
 '''
 class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
+    ############################################################
+    # Carpark Manager Class that records all activity including:
+    # cars arriving
+    # cars departing
+    # temperature measurements
+    # outputs:
+    # curret time
+    # number of bays available
+    # current temperature 
+    # handles edge cases 
+
+    ############################################################
+
     import threading        # REQUIRED FOR NEW TIMER
     #constant, for where to get the configuration data
     CONFIG_FILE = "samples_and_snippets\\config2.json"
@@ -57,40 +71,68 @@ class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
         )
 
     @property
-    def available_spaces(self):
+    def available_spaces_raw(self):
+        """
+        Returns the raw number of available spaces, which may be negative
+        """
         return int(self._available_spaces - self._total_cars_in) 
-        return int(self._available_spaces)
-
+    
+    @property
+    def available_spaces(self):       # never reduces below zero - Clamp to zero for display
+        """
+        Returns the available spaces, which is never negaitve
+        """
+        return max(0, int(self.available_spaces_raw))
+    
     @property
     def temperature(self):
+        """
+        Returns the current temperature as input from the GUI
+        """
         return int(self._temperature)
 
     @property
     def current_time(self):
+        """
+        Returns the current time
+        """
         return time.localtime()
     
     # Added this methods to enable the new timer in no_pi check_updates to communicate with CarparkDisplay
     def set_update_signal(self, update_event):
+            """
+            method to enable the new timer in no_pi check_updates to communicate with CarparkDisplay
+            """
             self._update_signal = update_event
 
     def signal_update(self):
-            """Sets the event to notify the CarParkDisplay to refresh."""
+            """
+            Sets the event to notify the CarParkDisplay to refresh.
+            """
             if self._update_signal:
                 self._update_signal.set()
 
-        #Ended of added code
+        #Ended of added code to modfy timer
 
     def temperature_reading(self,reading):
+        """
+        Captures the current temperature
+        """
         self._temperature = reading
         print(f'temperature is {reading}')
         if hasattr(self, "display") and self.display is not None:
-            self.display.update_display()
+            self.signal_update()
+
 
     def incoming_car(self,license_plate):
+        """
+        After updating the car count with a new car entry, signal the display to update
+        logs the car details to a text log on entry
+        """
         license_plate = license_plate.upper()
         self._total_cars_in += 1
-        self.signal_update()  # After updating the car count, signal the display to update *****
-        
+        self.signal_update()  
+                
         print('Car in! ' + license_plate)
         car = Car(license_plate)
         car.enter()
@@ -103,6 +145,11 @@ class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
         print(f"Entry {new_car_record['license_plate']} logged at {new_car_record['time_in']}")
         
     def outgoing_car(self,license_plate):
+        """
+        Updates the car count with a car exit if it has entered and signals the display to update
+        Does not updates the car count with a car exit if it has not entered and does not signal the display to update
+        logs the car exit details for both scenarios to a text log on exit
+        """
         license_plate = license_plate.upper()
         
         event_time = time.strftime("%H:%M:%S")
@@ -118,8 +165,8 @@ class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
 
         if car_found is not None:
             car = Car(license_plate)
-            car.exit()
-            
+            #car.exit()                     
+
             car.time_in = car_found["time_in"]
             car.date_in = car_found["date_in"]
                     
@@ -127,10 +174,20 @@ class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
             DATE_FORMAT = "%Y-%m-%d"
             TIME_FORMAT = "%H:%M:%S"
             
+            # EXPLICITLY SET EXIT TIME using datetime.now() (Ensures we get Mocked time in tests)
+            now_time = datetime.now() # Gets real time, or MOCKED time during unit tests
+            car.time_out = now_time.strftime(TIME_FORMAT)
+            car.date_out = now_time.strftime(DATE_FORMAT)
+
             try:
                 # Combine date and time strings into full datetime objects
-                datetime_in_str = f"{car.date_in} {car.time_in}"
+                #datetime_in_str = f"{car.date_in} {car.time_in}"
+                #datetime_out_str = f"{car.date_out} {car.time_out}"
+                datetime_in_str = f"{car_found["date_in"]} {car_found["time_in"]}"
                 datetime_out_str = f"{car.date_out} {car.time_out}"
+              
+                # FIX: Using the Time Date order for the format string
+                DATETIME_FORMAT = f"{TIME_FORMAT} {DATE_FORMAT}" # e.g. "%H:%M:%S %Y-%m-%d"
 
                 datetime_in = datetime.strptime(datetime_in_str, f"{DATE_FORMAT} {TIME_FORMAT}")
                 datetime_out = datetime.strptime(datetime_out_str, f"{DATE_FORMAT} {TIME_FORMAT}")
@@ -147,13 +204,13 @@ class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
             except Exception as e:
                 print(f"Error calculating duration for {license_plate}: {e}")
         
-        #exit_car_record = {"license_plate": license_plate, "time_in": car.time_in, "time_out" : event_time, "status": "Out", "date_in" : car.date_in, "date_out" : event_date}
+            #exit_car_record = {"license_plate": license_plate, "time_in": car.time_in, "time_out" : event_time, "status": "Out", "date_in" : car.date_in, "date_out" : event_date}
             self.cars_log.remove(car_found)  # remove from list
             self._total_cars_in -= 1
             self.signal_update()  # After updating the car count, signal the display to update ****
-            #self.display.update_display()
-
+            
             final_log_data = car.car_info()
+            self.last_car_out = car
             print(f"DEBUG: Logging exit data -> {final_log_data}")
 
             self.log_record(car)  # write to log
@@ -171,10 +228,16 @@ class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
         print('Car out! ' + license_plate)
 
     #logging method
-    def log_record(self,car):   
+    def log_record(self,car):
+        """
+        Logging method for car entry and exit
+        """  
         logging.info(car.car_info())  #log a car entry/exit
 
     def queen_street_log(mock): 
+        """
+        Logging test method for specific car park 
+        """  
         # Create a car for testing
         car1 = mocks.Car("1DKH682")
         car1.enter()
@@ -189,6 +252,9 @@ class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
         mock.log_record(car1)  # write to log
 
     def license_entered(self):
+        """
+        car entry test for specific car park 
+        """ 
         self.license_plate = plate
         plate = self.plate_var.get().strip()
         if plate:
@@ -202,6 +268,9 @@ class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
             self.license_var.set("")    
 
     def license_exited(self):
+        """
+        car exit test for specific car park 
+        """ 
         plate = self.license_var.get().strip()
         if plate:
             #create a car object
@@ -214,6 +283,13 @@ class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
             self.license_var.set("")
 
 class Car:
+    ############################################################
+    # Car Class
+    # A "Car" class to contain information about cars:
+    #   * License plate number. Used as an identifier
+    #   * Entry time
+    #   * Exit time
+     ############################################################
     def __init__(self,plate=None):
         self.license_plate = plate
         self.time_in = None
@@ -224,13 +300,15 @@ class Car:
         self.status = "Out" # if it is not in it is out and In is iniated by the enter process
 
     def enter(self):
-        self.time_in = time.strftime("%H:%M:%S" )
-        self.date_in = time.strftime("%Y-%m-%d")
+        now = datetime.now()
+        self.time_in = now.strftime("%H:%M:%S" )
+        self.date_in = now.strftime("%Y-%m-%d")
         self.status ="In"
 
     def exit(self):
-        self.time_out = time.strftime("%H:%M:%S" )
-        self.date_out = time.strftime("%Y-%m-%d")
+        now = datetime.now()
+        self.time_out = now.strftime("%H:%M:%S" )
+        self.date_out = now.strftime("%Y-%m-%d")
         self.status ="Out"
 
     def car_info(self):

@@ -95,7 +95,7 @@ class CarParkDisplay:
     def data_provider(self,provider):
         if isinstance(provider,CarparkDataProvider):
             self._provider=provider
-            self.data_provider.set_update_signal(self._update_event) # This is part of the new timer installed in Check_updates
+            self.data_provider.set_update_signal(self._update_event) #  This is part of the new timer installed in Check_updates
 
     def update_display(self):
         field_values = dict(zip(CarParkDisplay.fields, [
@@ -105,11 +105,13 @@ class CarParkDisplay:
         ]))
         self.window.update(field_values)
 
-    def check_updates(self):    
+    def check_updates(self):
+        """
+        timer to enable data provider and CarparkManager to talk to each other
+        """    
         while True:
-            """ added the following timer to enable data provider and CarparkManager to talk to each other"""
-            self._update_event.wait(1.0) #one second update to enable clock to operate 
-            self._update_event.clear()  #reset the event so it can wait again   #***
+            self._update_event.wait(1.0) # one second update to enable clock to operate 
+            self._update_event.clear()  #reset the event so it can wait again   
             
             if self._provider is not None:
                 self.update_display()
@@ -179,6 +181,8 @@ import threading
 if __name__ == '__main__':
    
     def simulate_queen_street_log(mock): 
+        """simulation of queen street log
+        """
         # Create a car for testing
         car1 = mocks.Car("1DKH682")
         car1.enter()
@@ -195,16 +199,15 @@ if __name__ == '__main__':
 
     #launch Gui
     root = tk.Tk()
-    #TODO: This is my dodgy mockup. Replace it with a good one!
     mock=mocks.MockCarparkManager()
     
     display=CarParkDisplay(root)
-    #TODO: Set the display to use your data source
+    # display set to use data source
     display.data_provider=mock
     mock.display = display
 
     detector=CarDetectorWindow(root)
-    #TODO: Attach your event listener
+    # Attachment of event listener
     detector.add_listener(mock)
 
     # Simulate car entries and exits in a separate thread
