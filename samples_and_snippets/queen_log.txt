@@ -17,3 +17,5 @@
 2025-11-25--12:06:55 - {'license_plate': 'LICENCE', 'time_in': '10:00:00', 'time_out': None, 'status': 'In', 'date_in': '2025-01-01', 'date_out': None}
 2025-11-25--12:06:55 - {'license_plate': 'LICENCE', 'time_in': '10:00:00', 'time_out': '10:15:00', 'status': 'Out', 'date_in': '2025-01-01', 'date_out': '2025-01-01'}
 2025-11-25--12:06:55 - {'license_plate': 'LICENCE', 'time_in': 'N/A', 'time_out': '12:06:55', 'status': 'Out', 'date_in': 'N/A', 'date_out': '2025-11-25'}
+2025-11-25--12:59:13 - {'license_plate': '1CPM 214', 'time_in': '12:59:13', 'time_out': None, 'status': 'In', 'date_in': '2025-11-25', 'date_out': None}
+2025-11-25--12:59:16 - {'license_plate': '1CPM 214', 'time_in': '12:59:13', 'time_out': '12:59:16', 'status': 'Out', 'date_in': '2025-11-25', 'date_out': '2025-11-25'}

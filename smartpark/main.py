@@ -26,7 +26,7 @@ import os
         ##COMPLETE
     
 '''
-class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
+class CarparkManager(CarparkSensorListener,CarparkDataProvider):
     ############################################################
     # Carpark Manager Class that records all activity including:
     # cars arriving
@@ -37,7 +37,7 @@ class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
     # number of bays available
     # current temperature 
     # handles edge cases 
-
+    # duration in carpark to enable no charging if less than 15 minutes
     ############################################################
 
     import threading        # REQUIRED FOR NEW TIMER
@@ -46,12 +46,13 @@ class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
     LOGGING = "samples_and_snippets\\"  
 
     def __init__(self):
-        self.configuration = parse_config(MockCarparkManager.CONFIG_FILE, "Queen Street")
+        self.configuration = parse_config(CarparkManager.CONFIG_FILE, "King Street")
         #Adding code for timer improvement - need a source of knowledge, using Gemin in the absence of this being available.
         # ... (initialization code remains the same)
         self._update_signal = None # New attribute to store the event
                 
         self._temperature = 30
+        self.location = self.configuration.get("location","Unknown Location")
         self._total_spaces = self.configuration ["total_spaces"]
         self.unuseable_spaces = self.configuration.get("unuseable_spaces",0)
         self._available_spaces = self._total_spaces - self.unuseable_spaces
@@ -70,6 +71,17 @@ class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
             datefmt='%Y-%m-%d--%H:%M:%S'
         )
 
+    @property
+    def location(self):
+        """
+        Returns the name of the carpark location
+        """
+        return self._location
+    
+    @location.setter
+    def location(self, value):
+        self._location = value
+    
     @property
     def available_spaces_raw(self):
         """
@@ -239,7 +251,7 @@ class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
         Logging test method for specific car park 
         """  
         # Create a car for testing
-        car1 = mocks.Car("1DKH682")
+        car1 = main.Car("1DKH682")
         car1.enter()
         print("Car entered:", car1.car_info())
         mock.log_record(car1)  # write to log
@@ -259,7 +271,7 @@ class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
         plate = self.plate_var.get().strip()
         if plate:
             #create a car object
-            car = mocks.Car(plate)
+            car = main.Car(plate)
             car.enter()
             #send to the manager
             for listener in self.listeners:
@@ -274,7 +286,7 @@ class MockCarparkManager(CarparkSensorListener,CarparkDataProvider):
         plate = self.license_var.get().strip()
         if plate:
             #create a car object
-            car = mocks.Car(plate)
+            car = main.Car(plate)
             car.exit()
             #send to the manager
             for listener in self.listeners:

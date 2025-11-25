@@ -7,12 +7,12 @@ import logging
 from pathlib import Path
 cwd = Path(os.path.dirname(__file__))
 parent = str (cwd.parent)
-#sys.path.append(os.path.dirname(cwd)+ "/smartpark") # simulating that the file is sititng alongside)
+#sys.path.append(os.path.dirname(cwd)+ "/smartpark") # simulating that the file is sitting alongside)
 
-sys.path.append(parent +"/smartpark") # simulating that the file is sititng alongside)
+sys.path.append(parent +"/smartpark") # simulating that the file is sitting alongside)
 
 #Change the line below to import your manager class
-from mocks import MockCarparkManager
+from main import CarparkManager
 
 # --- Mock Datetime Class for Test Control ---
 class MockDatetime(datetime):
@@ -20,7 +20,7 @@ class MockDatetime(datetime):
     controllable time, or a time that can be advanced."""
     #set a predictable, initial time
     INITIAL_TIME = datetime(2025, 11, 20, 10, 30, 0)
-    _test_time = INITIAL_TIME # internal rtacking variable
+    _test_time = INITIAL_TIME # internal tracking variable
     
     @classmethod
     def now(cls, tz=None):
@@ -44,13 +44,13 @@ class TestConfigParsing(unittest.TestCase):
     def test_fresh_carpark(self):
         # arrange - No data to arrange, checking setup of carpark from fresh
         #act
-        carpark = MockCarparkManager()
+        carpark = CarparkManager()
         # assert 
         self.assertEqual(135, carpark.available_spaces)   # Pulling data from Queen Street configuration
 
     def test_car_in(self):
         #arrange
-        carpark = MockCarparkManager()
+        carpark = CarparkManager()
         #act
         carpark.incoming_car("LICENCE")
         #carpark.log_record(car)  # write to log
@@ -60,7 +60,7 @@ class TestConfigParsing(unittest.TestCase):
 
     def test_available_spaces_clamped_at_zero(self):
         # arrange
-        carpark = MockCarparkManager()
+        carpark = CarparkManager()
         carpark._available_spaces = 3      # starting capacity
         carpark._total_cars_in = 0         # no cars yet
 
@@ -75,7 +75,7 @@ class TestConfigParsing(unittest.TestCase):
 
     def test_car_out_unrecognised_plate(self): 
         #arrange
-        carpark = MockCarparkManager()
+        carpark = CarparkManager()
         #act
         carpark.outgoing_car("LICENCE")
         #assert
@@ -83,7 +83,7 @@ class TestConfigParsing(unittest.TestCase):
 
     def test_car_out_recognised_plate(self): # Make sure there is a difference and behaviour checks correctly
         #arrange
-        carpark = MockCarparkManager()
+        carpark = CarparkManager()
         LICENCE = "MOCK_TIME"
         carpark.incoming_car("LICENCE")
         self.assertEqual(134,carpark.available_spaces)
@@ -94,10 +94,10 @@ class TestConfigParsing(unittest.TestCase):
         
 
     # Patch the datetime module used by your production code (e.g., mocks.py)
-    @patch('mocks.datetime', MockDatetime)
+    @patch('main.datetime', MockDatetime)
     def test_car_out_recognised_plate_with_15_minute_stay(self): # Make sure there is a difference and behaviour checks correctly
         #arrange
-        carpark = MockCarparkManager()
+        carpark = CarparkManager()
         LICENCE = "MOCK_TIME"
         car_found = {'license_plate': 'LICENCE', 'time_in': '10:00:00', 'time_out': None, 'status': 'In', 'date_in': '2025-1-1', 'date_out': None}
         #set the initial 'entry' time by calling the incoming function
@@ -115,7 +115,7 @@ class TestConfigParsing(unittest.TestCase):
 
     def test_temperature_output(self): # Make sure there is a difference and behaviour checks correctly
         #arrange
-        carpark = MockCarparkManager()
+        carpark = CarparkManager()
         #act Test with an integer reading (30)
         carpark.temperature_reading(30)
         #assert
@@ -129,7 +129,7 @@ class TestConfigParsing(unittest.TestCase):
         #assert
         self.assertEqual(30,carpark.temperature,"should reduce decimal to an integer.") 
 
-    @patch('mocks.datetime', MockDatetime)
+    @patch('main.datetime', MockDatetime)
     def test_incoming_car_logging(self):
         """
         Tests that a car log entry is generated correctly when a car enters, 
@@ -145,8 +145,8 @@ class TestConfigParsing(unittest.TestCase):
         #EXPECTED_TIME_STRING = "2025-11-20 10:30:00" # Matches MockDatetime.INITIAL_TIME
         EXPECTED_TIME_STRING = "10:30:00" # Matches MockDatetime.INITIAL_TIME
         
-       # We patch the 'datetime' object within the module where 'MockCarparkManager' 
-        # is defined (assumed to be 'mocks.py')
+       # We patch the 'datetime' object within the module where 'CarparkManager' 
+        # is defined ('main.py')
         
         with self.assertLogs(level='INFO') as log_capture:
             # act
@@ -172,14 +172,14 @@ class TestConfigParsing(unittest.TestCase):
                           "The logged message should contain the exact mocked entry time.")
              
             
-    @patch('mocks.datetime', MockDatetime)         
+    @patch('main.datetime', MockDatetime)         
     def test_outcoming_car_logging(self):
         """
         Tests that a car log exit is generated correctly when a car exits, 
         using a mocked, predictable timestamp.
         """
         # arrange
-        self.carpark = MockCarparkManager()
+        self.carpark = CarparkManager()
         MockDatetime._test_time =datetime(2025, 1, 1, 10, 30, 0) #resets time
         LICENSE_PLATE = "TEST_IN_123"
         MockDatetime.reset()

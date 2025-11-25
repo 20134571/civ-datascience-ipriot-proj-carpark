@@ -10,7 +10,8 @@ import time
 import tkinter as tk
 from typing import Iterable
 #TODO: replace this module with yours
-import mocks 
+from main import CarparkManager
+import main
 
 # ------------------------------------------------------------------------------------#
 # You don't need to understand how to implement this class.                           #
@@ -77,16 +78,16 @@ class CarParkDisplay:
     # determines what fields appear in the UI
     fields = ['Available bays', 'Temperature', 'At']
 
-    def __init__(self,root):
-        self.window = WindowedDisplay(root,
-            'Moondalup', CarParkDisplay.fields)
+    def __init__(self,root,location):
+        self.location = location
+        self.window = WindowedDisplay(root,self.location, CarParkDisplay.fields)
         self._update_event = threading.Event()
         updater = threading.Thread(target=self.check_updates)
         updater.daemon = True
         updater.start()
         self.window.show()
         self._provider=None
-    
+        
     @property
     def data_provider(self):
         return self._provider
@@ -184,7 +185,7 @@ if __name__ == '__main__':
         """simulation of queen street log
         """
         # Create a car for testing
-        car1 = mocks.Car("1DKH682")
+        car1 = main.Car("1DKH682")
         car1.enter()
         print("Car entered:", car1.car_info())
         mock.log_record(car1)  # write to log
@@ -199,9 +200,11 @@ if __name__ == '__main__':
 
     #launch Gui
     root = tk.Tk()
-    mock=mocks.MockCarparkManager()
+    manager = CarparkManager()
+    display = CarParkDisplay(root, manager.location)
+    mock=main.CarparkManager()
     
-    display=CarParkDisplay(root)
+    #display=CarParkDisplay(root)
     # display set to use data source
     display.data_provider=mock
     mock.display = display
