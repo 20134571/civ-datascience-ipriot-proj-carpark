@@ -3,7 +3,7 @@
 | General Requirements     | Code follows PEP 8 style guide                                                                                        | [ ]      |
 |                          | Code is documented with comments                                                                                       | [ ]      |
 | Configuration and data model    | **CarPark Class:**                                                                                                     |          |
-|                          | Can parse messages from sensor                                                                          | [ ]      |
+|                          | Can parse messages from sensor                                                                          | [x ]      |
 | Configuration File       | **CarPark Class:**                                                                                                     |          |
 | Management               | Reads initial configuration from a file                                                                                | [ ]      |
 | **Git Requirements**         | Forked the original project repository                                                                                 | [ ]      |

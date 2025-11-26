@@ -5,6 +5,7 @@ import time
 from datetime import datetime
 import logging
 import os
+from collections import defaultdict
 '''
     TODO: 
     - make your own module, or rename this one. Yours won't be a mock-up, so "mocks" is a bad name here.
@@ -43,19 +44,23 @@ class CarparkManager(CarparkSensorListener,CarparkDataProvider):
     import threading        # REQUIRED FOR NEW TIMER
     #constant, for where to get the configuration data
     CONFIG_FILE = "samples_and_snippets\\config2.json"
-    LOGGING = "samples_and_snippets\\"  
+    LOGGING = "samples_and_snippets\\"
+    ENTRYLOGGING = "samples_and_snippets\\"    
 
     def __init__(self):
         self.configuration = parse_config(CarparkManager.CONFIG_FILE, "King Street")
         #Adding code for timer improvement - need a source of knowledge, using Gemin in the absence of this being available.
         # ... (initialization code remains the same)
-        self._update_signal = None # New attribute to store the event
-                
+        self._update_signal = None # New attribute to store the event              
         self._temperature = 30
         self.location = self.configuration.get("location","Unknown Location")
         self._total_spaces = self.configuration ["total_spaces"]
         self.unuseable_spaces = self.configuration.get("unuseable_spaces",0)
         self._available_spaces = self._total_spaces - self.unuseable_spaces
+        self.hourly_entry_count = defaultdict(int)
+        self.hourly_exit_count = defaultdict(int)
+        self.cars_in_per_hour = {}   # { "2025-11-25 14": 3, "2025-11-25 15": 7 }
+        self.cars_out_per_hour = {}   # { "2025-11-25 14": 3, "2025-11-25 15": 7 }
         
         log_filename = self.configuration.get ("log_file", "")
         self.log_file = os.path.join(self.LOGGING, log_filename)
@@ -142,7 +147,7 @@ class CarparkManager(CarparkSensorListener,CarparkDataProvider):
         logs the car details to a text log on entry
         """
         license_plate = license_plate.upper()
-        self._total_cars_in += 1
+        self._total_cars_in += 1          
         self.signal_update()  
                 
         print('Car in! ' + license_plate)
@@ -151,6 +156,15 @@ class CarparkManager(CarparkSensorListener,CarparkDataProvider):
         event_date=  time.strftime("%Y-%m-%d")
         event_time= time.strftime("%H:%M:%S")
         
+        #############################Hourly count System ############################
+        current_hour_key = time.strftime("%Y-%m-%d %H")   # e.g. "2025-11-25 13"
+        if current_hour_key not in self.cars_in_per_hour:       #Sourced from Chatgpt
+            self.cars_in_per_hour[current_hour_key] = 0
+            
+        self.cars_in_per_hour[current_hour_key] += 1
+        print (f"[Entry Hourly Stats]  {current_hour_key}: {self.cars_in_per_hour[current_hour_key]}")
+        ###############################################################    
+
         new_car_record = car.car_info()
         self.cars_log.append(new_car_record)
         self.log_record(car)  # write to log
@@ -219,6 +233,16 @@ class CarparkManager(CarparkSensorListener,CarparkDataProvider):
             #exit_car_record = {"license_plate": license_plate, "time_in": car.time_in, "time_out" : event_time, "status": "Out", "date_in" : car.date_in, "date_out" : event_date}
             self.cars_log.remove(car_found)  # remove from list
             self._total_cars_in -= 1
+            
+            ############################# Hourly count System ############################
+            current_hour_key = time.strftime("%Y-%m-%d %H")   # e.g. "2025-11-25 13"
+            if current_hour_key not in self.cars_out_per_hour:       #Sourced from Chatgpt
+                self.cars_out_per_hour[current_hour_key] = 0
+            
+            self.cars_out_per_hour[current_hour_key] += 1
+            print (f"[Exit Hourly Stats]  {current_hour_key}: {self.cars_out_per_hour[current_hour_key]}")
+            ############################################################### 
+
             self.signal_update()  # After updating the car count, signal the display to update ****
             
             final_log_data = car.car_info()
@@ -245,6 +269,19 @@ class CarparkManager(CarparkSensorListener,CarparkDataProvider):
         Logging method for car entry and exit
         """  
         logging.info(car.car_info())  #log a car entry/exit
+
+    #Method for tracking hourly entries for reporting   Sourced from ChatGpt
+    def log_hourly_count(self, hour_key):
+        """Append hourly totals to a CSV file."""
+        filename = "hourly_car_counts.csv"
+        count_in = self.cars_in_per_hour.get(hour_key, 0)
+        count_out = self.cars_out_per_hour.get(hour_key, 0)
+
+        with open(filename, "a") as file:
+            file.write(f"{hour_key},{count}\n")
+
+    #logging.info(car.car_info())  #log a car entry/exit    
+
 
     def queen_street_log(mock): 
         """
@@ -293,6 +330,22 @@ class CarparkManager(CarparkSensorListener,CarparkDataProvider):
                 listener.log_record(car)
 
             self.license_var.set("")
+    
+    """ This enhancement has been decommossioned in conjunction with Chris Arnold"""
+    #def get_hourly_entry_report(self):
+    #    return {hour: self.hourly_entry_count[hour] 
+    #        for hour in sorted(self.hourly_entry_count)}
+
+    #def get_hourly_exit_report(self):
+    #return {hour: self.hourly_exit_count[hour] 
+    #        for hour in sorted(self.hourly_exit_count)}
+
+    #def reset_hourly_counts(self):          #needs to be added into a scheduler. 
+    #   self.hourly_entry_count = defaultdict(int)
+    #    self.hourly_exit_count = defaultdict(int)
+
+
+
 
 class Car:
     ############################################################
